@@ -1,0 +1,29 @@
+# Build outputs
+Debug/
+x64/
+MarioDemo/Debug/
+MarioDemo/x64/
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.log
+*.tlog
+*.recipe
+*.lastbuildstate
+unsuccessfulbuild
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# User / runtime data
+saves.txt
+data/*.dat
+
+# Editor / IDE
+*.VC.db
+*.VC.VC.opendb
