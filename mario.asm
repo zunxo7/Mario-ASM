@@ -727,6 +727,7 @@ currentMusicAlias dd -1
  menuSelection dd 0
  pauseSelection dd 0
  levelSelectSelection dd 0
+ levelSelectFromGameplay dd 0
  menuOffsetY dd 30
  levelSelectMenuCenterX dd 480
  levelSelectMenuCenterY dd 250
@@ -4560,6 +4561,12 @@ mario_draw_skipped:
 
  call DrawCameraBounds
 
+ ; Underground: draw fireballs again on top of camera bounds so they are visible
+ mov eax, isUnderground
+ test eax, eax
+ jz draw_level_done
+ call DrawFireballs
+
 draw_level_done:
  ret
 
@@ -5003,6 +5010,11 @@ draw_fireball_loop:
  jl next_fireball_draw
  cmp ebx, WINDOW_HEIGHT + 24
  jg next_fireball_draw
+
+ ; Underground: use fallback rect so fireball is visible (sprite can be invisible on dark bg)
+ mov eax, isUnderground
+ test eax, eax
+ jnz draw_fireball_fallback
 
  mov eax, hObjectsSheet
  test eax, eax
@@ -16841,6 +16853,11 @@ next_debris_update:
 debris_update_done:
  pop esi
 
+ ; Don't consume keyFire or spawn fireball during pipe transition (so Z works after exiting pipe)
+ mov eax, pipeTransition
+ test eax, eax
+ jnz fireball_update_movement
+
  mov eax, marioState
  cmp eax, MARIO_FIRE
  jne fireball_update_movement
@@ -16903,6 +16920,11 @@ update_fireball_loop:
 
  cmp dword ptr [fireballActive + esi * 4], 0
  je next_fireball_update
+
+ ; Grace frame: skip tile collision on first frame so fireball is visible when spawning (fixes underground)
+ mov eax, [fireballFrame + esi * 4]
+ test eax, eax
+ jz fireball_animate
 
  mov eax, [fireballY + esi * 4]
  add eax, 8
@@ -19090,7 +19112,10 @@ check_vk_t:
  jne check_vk_esc
  mov eax, gameState
  cmp eax, STATE_MENU
+ je check_test_name_t
+ cmp eax, STATE_GAMEPLAY
  jne key_handled
+check_test_name_t:
  lea esi, playerName
  cmp byte ptr [esi], 'T'
  jne key_handled
@@ -19102,6 +19127,14 @@ check_vk_t:
  jne key_handled
  cmp byte ptr [esi + 4], 0
  jne key_handled
+ mov eax, gameState
+ cmp eax, STATE_GAMEPLAY
+ jne level_select_from_menu
+ mov levelSelectFromGameplay, 1
+ jmp level_select_open
+level_select_from_menu:
+ mov levelSelectFromGameplay, 0
+level_select_open:
  mov gameState, STATE_LEVEL_SELECT
  mov levelSelectSelection, 0
  jmp key_handled
@@ -19137,6 +19170,12 @@ esc_highscores_back:
  jmp key_handled
 
 esc_level_select_back:
+ mov eax, levelSelectFromGameplay
+ test eax, eax
+ jz esc_level_select_to_menu
+ mov gameState, STATE_GAMEPLAY
+ jmp key_handled
+esc_level_select_to_menu:
  mov gameState, STATE_MENU
  call PlayMenuMusic
  jmp key_handled
