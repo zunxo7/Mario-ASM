@@ -745,6 +745,11 @@ midasLastPress dd 0
 midasUsesLeft dd 1
 MAX_MIDAS_USES equ 1
  keyM dd 0
+ ; Midas coin delay: coin at (col,row) not collectible until timer reaches 0 (so player can see it)
+midasCoinDelayCol dd 8 dup(0)
+midasCoinDelayRow dd 8 dup(0)
+midasCoinDelayTimer dd 8 dup(0)
+MIDAS_COIN_DELAY_FRAMES equ 45
 
  isInvincible dd 0
  invincibleTimer dd 0
@@ -1306,8 +1311,9 @@ MAX_MIDAS_USES equ 1
  colorBannerDark dd 00002070h
  colorGoldCoin dd 0000FFFFh
  colorGoldGlow dd 0000E8FFh
- colorGoldBar dd 0000D0FFh
+ colorGoldBar dd 0000B7FFh
  colorKickBar dd 00008000h
+ colorFireballFallback dd 000000FFh
 
  level1 db 20000 dup(0)
 
@@ -2407,9 +2413,14 @@ coin_icon_done:
  cmp eax, 0
  jg after_midas
 
+ ; Show Midas block when we have uses left OR when Midas is currently active (bar counting down)
  mov eax, midasUsesLeft
  test eax, eax
+ jnz do_midas_ui
+ mov eax, midasActive
+ test eax, eax
  jz after_midas
+do_midas_ui:
 
  mov eax, midasActive
  test eax, eax
@@ -2478,6 +2489,11 @@ check_invincible:
  mov eax, isInvincible
  test eax, eax
  jz hud_done
+
+ ; When Midas is active, show only the Midas bar (like KICK), not the invincibility flash
+ mov eax, midasActive
+ test eax, eax
+ jnz hud_done
 
  mov eax, invincibleTimer
  cmp eax, 30
@@ -4966,16 +4982,31 @@ DrawBrickDebris endp
 
 DrawFireballs proc uses eax ebx ecx edx esi edi ; include edi to avoid clobbering callers
 
- mov eax, hObjectsSheet
- test eax, eax
- jz draw_fireballs_done
-
  xor esi, esi
 draw_fireball_loop:
  cmp esi, MAX_FIREBALLS
  jge draw_fireballs_done
  cmp dword ptr [fireballActive + esi * 4], 0
  je next_fireball_draw
+
+ mov eax, [fireballX + esi * 4]
+ sub eax, cameraX
+ mov ebx, [fireballY + esi * 4]
+ sub ebx, cameraY
+
+ ; Skip if way off-screen (allow some margin so fireball is visible when spawning)
+ cmp eax, - 24
+ jl next_fireball_draw
+ cmp eax, WINDOW_WIDTH + 24
+ jg next_fireball_draw
+ cmp ebx, - 24
+ jl next_fireball_draw
+ cmp ebx, WINDOW_HEIGHT + 24
+ jg next_fireball_draw
+
+ mov eax, hObjectsSheet
+ test eax, eax
+ jz draw_fireball_fallback
 
  mov eax, [fireballX + esi * 4]
  sub eax, cameraX
@@ -4994,6 +5025,15 @@ draw_fireball_loop:
 
  invoke TransparentBlt, hdcMem, eax, ebx, 16, 16, \
  hdcObjects, ecx, OBJ_PARTICLE_Y, 16, 16, 00FF00FFh
+ jmp next_fireball_draw
+
+draw_fireball_fallback:
+ ; Objects sheet missing or fireball sprite not at OBJ_PARTICLE_Y: draw visible placeholder
+ mov eax, [fireballX + esi * 4]
+ sub eax, cameraX
+ mov ebx, [fireballY + esi * 4]
+ sub ebx, cameraY
+ invoke DrawRectangle, eax, ebx, 12, 12, colorFireballFallback
 
 next_fireball_draw:
  inc esi
@@ -8883,20 +8923,7 @@ check_goomba_col_loop:
 
 goomba_hurt_mario:
 
- mov eax, isInvincible
- test eax, eax
- jnz next_goomba_col
-
- dec lives
- cmp lives, 0
- jle game_over_goomba
- call StartMarioDeath
- jmp check_goomba_col_done
-
-game_over_goomba:
- call PlayGameOverSound
- mov gameState, STATE_GAME_OVER
- mov gameOverTimer, 180
+ call MarioDamage
  jmp check_goomba_col_done
 
 next_goomba_col:
@@ -11943,21 +11970,8 @@ check_shell_safe:
  cmp eax, ENEMY_BOWSER_FIREBALL
  jne normal_damage
 
- mov eax, isInvincible
- test eax, eax
- jnz next_enemy_col
-
- dec lives
- cmp lives, 0
- jle fireball_game_over
-
  mov dword ptr [enemyType + ecx * 4], ENEMY_NONE
- call StartMarioDeath
- jmp next_enemy_col
-fireball_game_over:
- call PlayGameOverSound
- mov gameState, STATE_GAME_OVER
- mov gameOverTimer, 180
+ call MarioDamage
  jmp next_enemy_col
 
 normal_damage:
@@ -12047,9 +12061,15 @@ MarioDamage proc uses eax
 
  mov marioState, MARIO_SMALL
  mov marioHitboxHeight, HITBOX_HEIGHT
+ ; Keep feet on same spot: was (marioY + 64), now (marioY + 32), so move origin down 32
+ mov eax, TILE_SIZE
+ add marioY, eax
  mov marioTransition, 2
  mov transitionFrame, 0
  mov transitionTimer, 4
+ ; Brief invincibility after shrinking so we don't get hit again immediately
+ mov isInvincible, 1
+ mov invincibleTimer, 90
  ret
 mario_dies:
  dec lives
@@ -13672,6 +13692,27 @@ do_invisible_wall_2_solid:
  jmp do_solid
 
 do_coin:
+ push ecx
+ xor ecx, ecx
+do_coin_delay_loop:
+ cmp ecx, 8
+ jge do_coin_delay_done
+ mov eax, [midasCoinDelayTimer + ecx * 4]
+ cmp eax, 0
+ jle do_coin_delay_next
+ mov eax, [midasCoinDelayCol + ecx * 4]
+ cmp eax, col
+ jne do_coin_delay_next
+ mov eax, [midasCoinDelayRow + ecx * 4]
+ cmp eax, row
+ jne do_coin_delay_next
+ pop ecx
+ jmp next_col
+do_coin_delay_next:
+ inc ecx
+ jmp do_coin_delay_loop
+do_coin_delay_done:
+ pop ecx
 
  mov byte ptr [esi], 0
  mov eax, 1
@@ -15575,23 +15616,12 @@ do_end_block:
  mov endSequenceDone, 1
  call PlayVictoryMusic
 
- mov eax, timer
- mov edx, 0
- mov ecx, 10
- div ecx
  mov recordedBonusTime, 0
- cmp edx, 1
- je set_end_bonus
- cmp edx, 3
- je set_end_bonus
- cmp edx, 6
- je set_end_bonus
- mov fireworksBonusActive, 0
- jmp init_end_sequence
-set_end_bonus:
+ ; Always enable fireworks bonus so 500 score + floating text show in normal play
  mov fireworksBonusActive, 1
  mov eax, timer
  mov recordedBonusTime, eax
+ jmp init_end_sequence
 
 init_end_sequence:
  mov fireworkBonusPhase, 0
@@ -16586,6 +16616,9 @@ update_gameplay_continue:
  mov midasActive, 1
  mov midasBar, 100
  mov midasKeyCount, 0
+ ; Invincible while Midas golden bar is active
+ mov isInvincible, 1
+ mov invincibleTimer, 100
  jmp midas_update_bar
 
 midas_no_uses_left:
@@ -16619,6 +16652,7 @@ midas_update_bar:
  mov midasBar, 0
  ; One-time use: consume all remaining uses once a Midas activation finishes
  mov midasUsesLeft, 0
+ ; Clear Midas-granted invincibility when bar runs out (invincibleTimer may still be > 0; leave it to count down)
 midas_done:
 
  mov eax, isInvincible
@@ -17816,6 +17850,19 @@ timer_game_over:
  jmp update_done
 timer_skip:
 
+ xor ecx, ecx
+midas_delay_dec_loop:
+ cmp ecx, 8
+ jge midas_delay_dec_done
+ mov eax, [midasCoinDelayTimer + ecx * 4]
+ cmp eax, 0
+ jle midas_delay_dec_next
+ dec dword ptr [midasCoinDelayTimer + ecx * 4]
+midas_delay_dec_next:
+ inc ecx
+ jmp midas_delay_dec_loop
+midas_delay_dec_done:
+
  call UpdateMario
  call CheckCoinCollisions
  call CheckMidasCollisions
@@ -18553,6 +18600,7 @@ midas_kill_common:
  mov ebx, TILE_SIZE
  xor edx, edx
  div ebx
+ push eax
 
  imul eax, TILE_COLS
  add eax, esi
@@ -18561,9 +18609,23 @@ midas_kill_common:
  mov byte ptr [edi], TILE_COIN
 
  add score, 200
+ pop ebx
  push ecx
- mov eax, 1
- call CollectCoins
+ xor edx, edx
+midas_delay_slot_loop:
+ cmp edx, 8
+ jge midas_delay_slot_done
+ mov eax, [midasCoinDelayTimer + edx * 4]
+ cmp eax, 0
+ jle midas_delay_found_slot
+ inc edx
+ jmp midas_delay_slot_loop
+midas_delay_found_slot:
+ mov [midasCoinDelayCol + edx * 4], esi
+ mov [midasCoinDelayRow + edx * 4], ebx
+ mov eax, MIDAS_COIN_DELAY_FRAMES
+ mov [midasCoinDelayTimer + edx * 4], eax
+midas_delay_slot_done:
  pop ecx
 
 midas_next_enemy:
@@ -19224,8 +19286,9 @@ check_return_level_select:
  mov eax, levelSelectSelection
  inc eax
  mov currentLevel, eax
+ mov currentStage, eax
  mov currentWorld, 1
- mov currentStage, 1
+ call UpdateWorldNumber
  mov score, 0
  mov coins, 0
  mov lives, 3
