@@ -3,6 +3,8 @@ Debug/
 x64/
 MarioDemo/Debug/
 MarioDemo/x64/
+# Duplicate levels (game uses root levels/ only)
+MarioDemo/levels/
 *.obj
 *.pdb
 *.ilk
