@@ -8,16 +8,15 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 
 - **Windows** (Win32)
 - **Visual Studio** with C++ desktop workload and **MASM** (Microsoft Macro Assembler)
-- Build for **Win32** (x86); x64 build may require adjustments
+- Build for **Win32** (x86) only
 
 ---
 
 ## Build & Run
 
 1. Open `MarioDemo.sln` in Visual Studio.
-2. Set configuration to **Debug** or **Release**, platform **Win32**.
-3. Build (F7) and run (F5).
-4. The game loads assets from `asset\` and `sounds\` relative to the executable (typically `MarioDemo\Debug\` or `MarioDemo\x64\Debug\`). Copy `asset`, `sounds`, and `levels` next to the `.exe` if needed.
+2. Set configuration to **Debug**, platform **x86** (Win32).
+3. Click **Local Windows Debugger** (or press F5).
 
 ---
 
@@ -31,19 +30,11 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 | Crouch / slide| **Down arrow** or **S**        |
 | Run           | **Shift** (hold)               |
 | Fireball      | **Z** (when Fire Mario)       |
-| Midas Touch   | **K** (when available)        |
+| Kick (shell)  | **K**                         |
+| Midas Touch   | **M** (when available)        |
 | Pause         | **Escape**                     |
 | Level select  | **T** (Test mode only, from main menu) |
 | Back from level select | **Escape**            |
-
----
-
-## Game Flow & Screens
-
-- **Title** → **Name entry** → **Main menu** (New Game / Continue / High Scores)
-- **Level select**: In Test mode (name `TEST`), from main menu press **T** to open level select overlay; **Escape** returns to menu.
-- **Level title** → **Gameplay** → **Flagpole** / **Game Over** / **Game Complete**
-- **Pause**: **Escape** during gameplay
 
 ---
 
@@ -72,6 +63,7 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 ### Level & world
 
 - **4 levels** (level data in `levels\`: `level1.txt`–`level4.txt`, pipes, platforms, firebars, `level_setup.txt` for camera/background).
+- **Level editor**: `level_editor.html` — optional in-browser tool to edit level tile data.
 - **Overworld / underground / castle** themes; camera and background per level (e.g. `level_setup.txt`: overworld/underground snap Y, background height/offset).
 - **Pipes**: Enter/exit; pipe travel (warp) with sound.
 - **Flagpole**: Reach to finish level; castle flag for Bowser level.
@@ -80,7 +72,7 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 
 ### Midas Touch
 
-- **K** activates when available; turns enemies to gold (defeats them).
+- **M** activates when available; turns enemies to gold (defeats them).
 - **Single use per game** (one use total); **disabled on Level 4** (Bowser).
 
 ### Save & continue
@@ -134,5 +126,5 @@ MarioDemo/
 
 ## Credits
 
-- **Author**: ZUNNOON  
-- **Window title**: SUPER MARIO BROS - I24 - 0531
+- **Zunnoon Jawad**
+- Window title: SUPER MARIO BROS - I24 - 0531

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mario Level Editor</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,11 +13,11 @@
         }
 
         body {
-            font-family: 'VT323', 'Courier New', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(180deg, #000 0%, #1a0a2e 100%);
             min-height: 100vh;
             color: #fff;
-            overflow: hidden; /* prevent page scroll; use inner scrollers */
+            padding: 16px;
         }
 
         .container {
@@ -25,10 +25,37 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            height: 100vh;
+            flex-direction: row;
+            height: calc(100vh - 32px);
             overflow: hidden;
             position: relative;
+        }
+
+        .tools-section {
+            flex: 0 0 auto;
+            width: 72px;
+            background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
+            border-right: 3px solid #8b5cf6;
+            border-radius: 0;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin-right: 15px;
+        }
+        .tools-section-title {
+            color: #ffcc00;
+            font-size: 18px;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .tools-section .side-panel-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .main-content {
@@ -38,7 +65,7 @@
             overflow-y: auto;
             overflow-x: hidden;
             align-items: center;
-            padding: 25px 0 0 0;
+            padding: 25px 20px 20px 20px; /* Added right padding for scrollbar separation */
             min-width: 0;
         }
 
@@ -186,13 +213,15 @@
 
         .toolbar-input-group input {
             width: 100%;
-            padding: 6px;
-            border: 1px solid #8b5cf6;
-            border-radius: 3px;
+            padding: 8px;
+            border: 2px solid #8b5cf6;
+            border-radius: 4px;
             background: #0a0a1a;
             color: #fff;
-            font-size: 14px;
+            font-size: 18px;
             text-align: center;
+            font-weight: bold;
+            font-family: 'VT323', monospace;
         }
 
         /* Hide number input spinners */
@@ -293,13 +322,11 @@
         }
 
         .size-panel {
-            position: fixed;
-            left: 100px;
-            top: 20px;
+            position: relative;
             background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
             border: 3px solid #8b5cf6;
             border-radius: 8px;
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), 0 8px 32px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
             z-index: 1000;
             transition: width 0.3s ease, height 0.3s ease, min-width 0.3s ease, min-height 0.3s ease, max-width 0.3s ease, max-height 0.3s ease, padding 0.3s ease;
             width: 60px;
@@ -318,7 +345,7 @@
             height: auto;
             min-height: auto;
             max-height: calc(100vh - 40px);
-            padding: 8px 4px;
+            padding: 10px;
         }
 
         .size-panel.minimized {
@@ -570,14 +597,151 @@
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(0,0,0,0.5);
         }
 
+        .top-row {
+            display: flex;
+            width: 100%;
+            gap: 12px;
+            margin-bottom: 30px;
+            min-height: -webkit-min-content;
+            min-height: -moz-min-content;
+            min-height: min-content;
+            flex-shrink: 0;
+        }
+
+        .tile-palette-column {
+            flex: 0 0 48%;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grid-size-column {
+            flex: 0 0 auto;
+            min-width: 140px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .grid-size-container {
+            background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
+            border: 3px solid #8b5cf6;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .grid-size-container h3 {
+            color: #ffcc00;
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .output-column {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
+            border: 3px solid #8b5cf6;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            max-height: 260px;
+            overflow: hidden;
+        }
+
+        .output-column h3 {
+            color: #ffcc00;
+            font-size: 18px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .output-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            margin: 8px 0 4px 0;
+            padding: 2px 0;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .output-section-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .output-section-header h4 {
+            color: #ffcc00;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .output-section-toggle {
+            color: #ffcc00;
+            font-size: 16px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .output-section.minimized .output-section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .output-section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s, margin 0.3s;
+            max-height: 500px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .output-section.minimized .output-section-content {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+        }
+
+        .output-scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+
+
+        .output-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0;
+            padding: 4px;
+            overflow: auto;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
         .tile-palette-container {
             background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
             border: 3px solid #8b5cf6;
             border-radius: 8px;
             padding: 10px;
-            margin: 0 auto 12px auto;
-            width: 90%;
-            max-width: 1400px;
+            margin: 0;
+            width: 100%;
             max-height: 260px;
             overflow-y: auto;
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
@@ -725,240 +889,7 @@
             background-color: #000;
         }
 
-        .output-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 10px auto 0 auto;
-            width: 100%;
-            max-height: 24vh;
-            overflow: auto; /* keep outputs inside viewport */
-            justify-content: center;
-            align-items: flex-start;
-        }
 
-        .output-section {
-            position: relative;
-            background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
-            padding: 10px;
-            border-radius: 8px;
-            border: 3px solid #8b5cf6;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-            transition: width 0.3s ease, height 0.3s ease, min-width 0.3s ease, min-height 0.3s ease, max-width 0.3s ease, max-height 0.3s ease, padding 0.3s ease;
-            width: 300px;
-            min-width: 200px;
-            min-height: 100px;
-            overflow: hidden;
-        }
-
-        .output-section.expanded {
-            width: 400px;
-            min-width: 350px;
-            height: auto;
-            min-height: auto;
-            max-height: none;
-        }
-
-        .output-section.minimized {
-            width: 60px;
-            min-width: 60px;
-            max-width: 60px;
-            height: 60px;
-            min-height: 60px;
-            max-height: 60px;
-            padding: 0;
-        }
-
-        .output-content {
-            transition: opacity 0.3s ease, max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
-            opacity: 1;
-            max-height: 2000px;
-            overflow: hidden;
-        }
-
-        .output-section.minimized .output-content {
-            opacity: 0;
-            max-height: 0;
-            padding: 0;
-            margin: 0;
-        }
-
-        .output-section.minimized .output-header h3 {
-            display: none;
-        }
-
-        .output-section.minimized .output-header {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .output-section.minimized .minimize-btn {
-            width: auto;
-            height: auto;
-            padding: 0;
-            font-size: 16px;
-            background: transparent;
-            border: none;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .output-section.minimized .output-header > div {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .output-section.expanded .output-content {
-            display: block;
-        }
-
-        .output-section.minimized h3 {
-            font-size: 14px;
-        }
-
-        .output-header {
-            cursor: pointer;
-            padding: 8px 4px;
-            background: rgba(139, 92, 246, 0.2);
-            border-bottom: 2px solid #8b5cf6;
-            user-select: none;
-            text-align: center;
-            margin-bottom: 8px;
-            transition: background 0.2s ease, margin-bottom 0.3s ease, padding 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .output-section.minimized .output-header {
-            margin-bottom: 0;
-            border-bottom: none;
-        }
-
-        .output-header:hover {
-            background: rgba(139, 92, 246, 0.4);
-        }
-
-        .output-header:active {
-            background: rgba(139, 92, 246, 0.5);
-        }
-
-        .output-section.dragging {
-            cursor: grabbing;
-        }
-
-        .output-section-resize {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 8px;
-            height: 8px;
-            cursor: nwse-resize;
-            background: rgba(139, 92, 246, 0.2);
-            z-index: 100;
-            border-radius: 0 0 0 4px;
-            display: none; /* Hidden by default, shown when expanded */
-            pointer-events: auto;
-        }
-
-        .output-section .output-section-resize {
-            display: block;
-        }
-
-        .output-section-resize:hover {
-            background: rgba(139, 92, 246, 0.5);
-        }
-
-        .output-section-resize-width {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 8px;
-            height: 100%;
-            cursor: ew-resize;
-            background: transparent;
-            z-index: 99;
-            display: none; /* Hidden by default, shown when expanded */
-            pointer-events: auto;
-        }
-
-        .output-section .output-section-resize-width {
-            display: block;
-        }
-
-        .output-section-resize-width:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-
-        .output-section-resize-height {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 8px;
-            cursor: ns-resize;
-            background: transparent;
-            z-index: 99;
-            display: none; /* Hidden by default, shown when expanded */
-            pointer-events: auto;
-        }
-
-        .output-section .output-section-resize-height {
-            display: block;
-        }
-
-        .output-section-resize-height:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-
-        .output-header h3 {
-            display: none;
-        }
-
-        .output-content {
-            transition: opacity 0.3s ease, max-height 0.3s ease;
-            opacity: 1;
-            max-height: 2000px;
-        }
-
-        .output-section.minimized .output-content {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            padding: 0;
-            margin: 0;
-        }
-
-        .minimize-btn {
-            background: rgba(139, 92, 246, 0.3);
-            border: 2px solid #8b5cf6;
-            border-radius: 4px;
-            color: #fff;
-            padding: 4px 8px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-
-        .minimize-btn:hover {
-            background: rgba(139, 92, 246, 0.5);
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
 
         .output-header h3 {
             color: #ffcc00;
@@ -974,8 +905,9 @@
             border: 2px solid #4a90e2;
             border-radius: 5px;
             padding: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
             resize: vertical;
         }
 
@@ -1091,25 +1023,27 @@
         /* Custom scrollbars */
         * {
             scrollbar-width: thin;
-            scrollbar-color: #8b5cf6 #1a0a2e;
+            scrollbar-color: #00f2ff #1a0a2e;
         }
 
         *::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 14px;
+            height: 14px;
         }
 
         *::-webkit-scrollbar-track {
             background: #1a0a2e;
+            border-radius: 10px;
         }
 
         *::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
-            border-radius: 6px;
+            background: #00f2ff;
+            border-radius: 10px;
+            border: 4px solid #1a0a2e; /* Floating effect - creates gap around thumb */
         }
 
         *::-webkit-scrollbar-thumb:hover {
-            background: #a78bfa;
+            background: #00b8cc;
         }
 
         .properties-panel {
@@ -1179,14 +1113,16 @@
         .status-bar {
             display: flex;
             gap: 20px;
-            font-size: 14px;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
             color: #a78bfa;
-            padding: 10px 15px;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.4);
             border: 2px solid #8b5cf6;
             border-radius: 8px;
-            margin: 10px auto;
+            margin: 15px auto 12px auto;
             width: fit-content;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         /* Context Menu Styles */
@@ -1336,15 +1272,88 @@
             font-size: 11px;
             color: #a78bfa;
         }
+
+        .help-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        .help-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .help-overlay-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            cursor: pointer;
+        }
+        .help-overlay-box {
+            position: relative;
+            background: linear-gradient(180deg, #2c1654 0%, #1a0a2e 100%);
+            border: 3px solid #8b5cf6;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            max-width: 480px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .help-overlay-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 2px solid #8b5cf6;
+            color: #ffcc00;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .help-overlay-close {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .help-overlay-close:hover {
+            color: #ffcc00;
+        }
+        .help-overlay-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+        .help-overlay-body h4 {
+            color: #ffcc00;
+            margin: 12px 0 6px 0;
+            font-size: 14px;
+        }
+        .help-overlay-body h4:first-child { margin-top: 0; }
+        .help-overlay-body p, .help-overlay-body ul {
+            margin: 0 0 8px 0;
+            color: #e5e7eb;
+        }
+        .help-overlay-body ul { padding-left: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="side-panel minimized" id="sidePanel">
-            <div class="side-panel-header" id="side-panel-header" onclick="togglePanel('sidePanel')">
-                <h1 style="margin: 0;">🍄</h1>
-            </div>
-
+        <div class="tools-section" id="sidePanel">
+            <h3 class="tools-section-title">🍄</h3>
             <div class="side-panel-content">
                 <div class="toolbar-separator"></div>
 
@@ -1373,40 +1382,91 @@
                 <div class="toolbar-group">
                     <button class="toolbar-btn success" onclick="exportAll()" title="Export (Ctrl+S)">⬇</button>
                     <button class="toolbar-btn warning" onclick="importAll()" title="Import (Ctrl+O)">⬆</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="size-panel minimized" id="sizePanel">
-            <div class="side-panel-header" id="size-panel-header" onclick="togglePanel('sizePanel')">
-                <h1 style="margin: 0;">📏</h1>
-            </div>
-
-            <div class="size-panel-content">
-                <div class="toolbar-group" style="display: flex; flex-direction: column; gap: 4px;">
-                    <div class="toolbar-input-group" style="width: 100%;">
-                        <input type="number" id="level-num" value="1" min="1" max="4" title="Level">
-                        <label>Lv</label>
-                    </div>
-                    <div style="display: flex; gap: 4px; width: 100%;">
-                        <div class="toolbar-input-group" style="flex: 1;">
-                            <input type="number" id="rows" value="17" min="5" max="50" title="Rows">
-                            <label>R</label>
-                        </div>
-                        <div class="toolbar-input-group" style="flex: 1;">
-                            <input type="number" id="cols" value="60" min="10" max="200" title="Columns">
-                            <label>C</label>
-                        </div>
-                    </div>
+                    <button class="toolbar-btn" onclick="openHelpOverlay()" title="Help">❓</button>
                 </div>
             </div>
         </div>
 
         <div class="main-content">
-            <div class="tile-palette-container">
-                <h3>🎨 Tile Palette</h3>
-                <div class="toolbar" id="toolbar">
-                    <!-- Tiles will be added by JS -->
+            <div class="top-row">
+                <div class="tile-palette-column">
+                    <div class="tile-palette-container">
+                        <h3>🎨 Tile Palette</h3>
+                        <div class="toolbar" id="toolbar">
+                            <!-- Tiles will be added by JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="output-column">
+                    <h3>📋 Data Output</h3>
+                    <div class="output-scroll-container">
+                        <div class="output-section" id="section-foreground">
+                            <div class="output-section-header" onclick="toggleOutputSection('section-foreground')">
+                                <h4>Grid (foreground)</h4>
+                                <span class="output-section-toggle">−</span>
+                            </div>
+                            <div class="output-section-content">
+                                <textarea id="output" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="output-section" id="section-pipes">
+                            <div class="output-section-header" onclick="toggleOutputSection('section-pipes')">
+                                <h4>Pipes 🚪</h4>
+                                <span class="output-section-toggle">−</span>
+                            </div>
+                            <div class="output-section-content">
+                                <div id="pipes-list" style="max-height: 150px; overflow-y: auto; padding: 4px; margin-bottom: 8px;">
+                                    <!-- Pipe links will be added here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section" id="section-firebars">
+                            <div class="output-section-header" onclick="toggleOutputSection('section-firebars')">
+                                <h4>Firebars 🔥</h4>
+                                <span class="output-section-toggle">−</span>
+                            </div>
+                            <div class="output-section-content">
+                                <div id="firebars-list" style="max-height: 150px; overflow-y: auto; padding: 4px; margin-bottom: 8px;">
+                                    <!-- Firebar entries will be added here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section" id="section-platforms">
+                            <div class="output-section-header" onclick="toggleOutputSection('section-platforms')">
+                                <h4>Platforms 🪜</h4>
+                                <span class="output-section-toggle">−</span>
+                            </div>
+                            <div class="output-section-content">
+                                <div id="platforms-list" style="max-height: 150px; overflow-y: auto; padding: 4px;">
+                                    <!-- Platform entries will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-size-column">
+                    <div class="grid-size-container">
+                        <h3>📏 Grid Size</h3>
+                        <div class="toolbar-group" style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="toolbar-input-group" style="width: 100%;">
+                                <input type="number" id="level-num" value="1" min="1" max="4" title="Level">
+                                <label>Lv</label>
+                            </div>
+                            <div style="display: flex; gap: 4px; width: 100%;">
+                                <div class="toolbar-input-group" style="flex: 1;">
+                                    <input type="number" id="rows" value="17" min="5" max="50" title="Rows">
+                                    <label>R</label>
+                                </div>
+                                <div class="toolbar-input-group" style="flex: 1;">
+                                    <input type="number" id="cols" value="60" min="10" max="200" title="Columns">
+                                    <label>C</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1418,63 +1478,6 @@
 
             <div class="status-bar">
                 <span id="status">Hover over grid for info (Row/Col are 1-based, Pixel positions shown)</span>
-            </div>
-
-            <div class="output-container">
-                <div class="output-section minimized" id="output-foreground" style="position: relative;">
-                    <div class="output-section-resize-width" id="foreground-section-resize-width"></div>
-                    <div class="output-section-resize-height" id="foreground-section-resize-height"></div>
-                    <div class="output-section-resize" id="foreground-section-resize"></div>
-                    <div class="output-header" id="foreground-section-header" onclick="toggleMinimize('output-foreground')">
-                        <button class="minimize-btn" style="background: none; border: none; font-size: 16px; pointer-events: none;">📄</button>
-                    </div>
-                    <div class="output-content">
-                        <textarea id="output" readonly></textarea>
-                    </div>
-                </div>
-
-                <div class="output-section minimized" id="output-pipes-section" style="position: relative;">
-                    <div class="output-section-resize-width" id="pipes-section-resize-width"></div>
-                    <div class="output-section-resize-height" id="pipes-section-resize-height"></div>
-                    <div class="output-section-resize" id="pipes-section-resize"></div>
-                    <div class="output-header" id="pipes-section-header" onclick="toggleMinimize('output-pipes-section')">
-                        <button class="minimize-btn" style="background: none; border: none; font-size: 16px; pointer-events: none;">🚪</button>
-                    </div>
-                    <div class="output-content">
-                        <div id="pipes-list" style="max-height: 300px; overflow-y: auto; padding: 8px;">
-                            <!-- Pipe entries will be added here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="output-section minimized" id="output-firebars-section" style="position: relative;">
-                    <div class="output-section-resize-width" id="firebars-section-resize-width"></div>
-                    <div class="output-section-resize-height" id="firebars-section-resize-height"></div>
-                    <div class="output-section-resize" id="firebars-section-resize"></div>
-                    <div class="output-header" id="firebars-section-header" onclick="toggleMinimize('output-firebars-section')">
-                        <button class="minimize-btn" style="background: none; border: none; font-size: 16px; pointer-events: none;">🔥</button>
-                    </div>
-                    <div class="output-content">
-                        <div id="firebars-list" style="max-height: 300px; overflow-y: auto; padding: 8px;">
-                            <!-- Firebar entries will be added here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="output-section minimized" id="output-platforms-section" style="position: relative;">
-                    <div class="output-section-resize-width" id="platforms-section-resize-width"></div>
-                    <div class="output-section-resize-height" id="platforms-section-resize-height"></div>
-                    <div class="output-section-resize" id="platforms-section-resize"></div>
-                    <div class="output-header" id="platforms-section-header" onclick="toggleMinimize('output-platforms-section')">
-                        <button class="minimize-btn" style="background: none; border: none; font-size: 16px; pointer-events: none;">🪜</button>
-                    </div>
-                    <div class="output-content">
-                        <div id="platforms-list" style="max-height: 300px; overflow-y: auto; padding: 8px;">
-                            <!-- Platform entries will be added here -->
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -1580,6 +1583,46 @@
             </div>
         </div>
 
+        <!-- Help overlay -->
+        <div class="help-overlay" id="helpOverlay">
+            <div class="help-overlay-backdrop" onclick="closeHelpOverlay()"></div>
+            <div class="help-overlay-box">
+                <div class="help-overlay-header">
+                    <span>❓ Help</span>
+                    <button class="help-overlay-close" onclick="closeHelpOverlay()">✕</button>
+                </div>
+                <div class="help-overlay-body">
+                    <h4>🛠️ Tool Reference</h4>
+                    <p><strong>Selection (🔲):</strong> Activates rectangular marquee. Drag on grid to select area. Enables batch tools (Fill, Cut, Delete).</p>
+                    <p><strong>Fill (🎨):</strong> Batch-paints the current selection or a row/column with the active tile.</p>
+                    <p><strong>Undo/Redo:</strong> History stack for all tile placements and grid modifications.</p>
+                    <p><strong>Export/Import:</strong> Serializes level state to JSON for persistence and sharing.</p>
+
+                    <h4>📊 Data Output Definitions</h4>
+                    <p><strong>Foreground (Grid):</strong> A linear array of hex codes representing tile indices. These are copied directly into the world data tables in your ASM.</p>
+                    
+                    <p><strong>Pipes (🚪):</strong> Logic links for warp behavior. Defines <code>Source (X, Y)</code> coordinates and <code>Target</code> destinations (Level index and Entrance side).</p>
+                    
+                    <p><strong>Firebars (🔥):</strong> Entity definitions for rotating hazards. Tracks <code>X/Y</code> pivot, <code>Length</code> (tiles), and <code>Speed/Direction</code> of rotation.</p>
+                    
+                    <p><strong>Platforms (🪜):</strong> Moving surface data. Defines the <code>Path</code> (Start/End), <code>Speed</code>, and <code>Type</code> (Horizontal/Vertical) for the game engine.</p>
+
+                    <h4>⌨️ Advanced Interaction</h4>
+                    <p><strong>Right-Click (Object Properties):</strong> Right-click on special tiles like <strong>Pipes, Firebars, or Platforms</strong> to configure their properties. This opens a modal to set warp destinations, rotation speeds, or movement paths.</p>
+                    
+                    <p><strong>Right-Click (Grid Utility):</strong> Right-click on standard tiles to access the Context Menu for row/column operations (Fill/Clear) and selection management (Cut/Copy/Paste).</p>
+
+                    <p><strong>Ctrl + Wheel:</strong> Adjusts viewport scale (25% for overview, 200% for precision tiling).</p>
+
+                    <h4 style="margin-top: 15px;">Shortcuts</h4>
+                    <ul style="font-size: 13px;">
+                        <li><strong>S</strong> — Toggle select mode</li>
+                        <li><strong>Ctrl+X / C / V</strong> — Cut / Copy / Paste selected tiles</li>
+                        <li><strong>Ctrl+S / O</strong> — Quick Export / Import</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -3622,6 +3665,16 @@ menu.style.top = e.clientY + 'px';
             if (panel) panel.style.display = 'block';
         }
 
+        function openHelpOverlay() {
+            document.getElementById('helpOverlay').classList.add('show');
+        }
+        function closeHelpOverlay() {
+            document.getElementById('helpOverlay').classList.remove('show');
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('helpOverlay').classList.contains('show')) closeHelpOverlay();
+        });
+
         function closePropertiesPanel() {
             const panel = document.getElementById('propertiesPanel');
             if (panel) panel.style.display = 'none';
@@ -4177,7 +4230,7 @@ menu.style.top = e.clientY + 'px';
             });
         }
 
-        // Sidebar drag and resize functionality
+        // Sidebar drag functionality
         let isDragging = false;
         let isResizing = false;
         let dragStartX = 0;
@@ -4187,84 +4240,33 @@ menu.style.top = e.clientY + 'px';
         let initialWidth = 0;
 
         const sidePanel = document.getElementById('sidePanel');
-        const sidePanelResize = document.getElementById('sidePanelResize');
-        const sidePanelHeader = sidePanel.querySelector('.side-panel-header');
-
-        // Track if dragging occurred to prevent toggle
         let sidePanelDragOccurred = false;
         
-        // Collapse/expand functionality moved to togglePanel function
-
-        // Drag functionality - can drag from anywhere, but header click toggles
-        sidePanel.addEventListener('mousedown', (e) => {
-            // Don't drag if clicking on buttons or inputs (but allow header when minimized)
-            if (e.target.closest('button') || e.target.closest('.toolbar-input-group')) return;
-            if (e.target.closest('.side-panel-resize')) return;
-            // If clicking on header and not minimized, let the toggle handle it
-            if (e.target.closest('.side-panel-header') && !sidePanel.classList.contains('minimized')) return;
-            isDragging = true;
-            sidePanelDragOccurred = false;
-            sidePanel.classList.add('dragging');
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-            const rect = sidePanel.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
-            e.preventDefault();
-        });
-
-        // Resize functionality - disabled for narrow toolbar
-        // sidePanelResize.addEventListener('mousedown', (e) => {
-        //     isResizing = true;
-        //     dragStartX = e.clientX;
-        //     const rect = sidePanel.getBoundingClientRect();
-        //     initialWidth = rect.width;
-        //     e.preventDefault();
-        // });
-
-        // Size panel drag functionality
-        let isSizePanelDragging = false;
-        let sizePanelDragStartX = 0;
-        let sizePanelDragStartY = 0;
-        let sizePanelInitialLeft = 0;
-        let sizePanelInitialTop = 0;
-
-        const sizePanel = document.getElementById('sizePanel');
-        const sizePanelHeader = sizePanel ? sizePanel.querySelector('.side-panel-header') : null;
-
-        // Track if dragging occurred to prevent toggle
-        let sizePanelDragOccurred = false;
-        
-        // Collapse/expand functionality moved to togglePanel function
-
-        // Size panel drag functionality - can drag from anywhere, but header click toggles
-        if (sizePanel) {
-            sizePanel.addEventListener('mousedown', (e) => {
-                // Don't drag if clicking on inputs or labels (but allow header when minimized)
-                if (e.target.closest('input') || e.target.closest('label')) return;
-                // If clicking on header and not minimized, let the toggle handle it
-                if (e.target.closest('.side-panel-header') && !sizePanel.classList.contains('minimized')) return;
-                isSizePanelDragging = true;
-                sizePanelDragOccurred = false;
-                sizePanel.classList.add('dragging');
-                sizePanelDragStartX = e.clientX;
-                sizePanelDragStartY = e.clientY;
-                const rect = sizePanel.getBoundingClientRect();
-                sizePanelInitialLeft = rect.left;
-                sizePanelInitialTop = rect.top;
+        if (sidePanel && !sidePanel.classList.contains('tools-section')) {
+            sidePanel.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button') || e.target.closest('.toolbar-input-group')) return;
+                if (e.target.closest('.side-panel-resize')) return;
+                if (e.target.closest('.side-panel-header') && !sidePanel.classList.contains('minimized')) return;
+                isDragging = true;
+                sidePanelDragOccurred = false;
+                sidePanel.classList.add('dragging');
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                const rect = sidePanel.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
                 e.preventDefault();
             });
         }
 
         let rafId = null;
         document.addEventListener('mousemove', (e) => {
-            if (isDragging || isSizePanelDragging || foregroundSectionDragging || backgroundSectionDragging || pipesSectionDragging || firebarsSectionDragging || platformsSectionDragging || isResizing || isResizingForeground || isResizingPipes || isResizingFirebars || isResizingPlatforms) {
+            if (isDragging || isResizing) {
                 if (rafId) cancelAnimationFrame(rafId);
                 rafId = requestAnimationFrame(() => {
                     if (isDragging) {
                         const deltaX = e.clientX - dragStartX;
                         const deltaY = e.clientY - dragStartY;
-                        // Mark that dragging occurred if mouse moved
                         if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
                             sidePanelDragOccurred = true;
                         }
@@ -4272,119 +4274,10 @@ menu.style.top = e.clientY + 'px';
                         sidePanel.style.left = (initialLeft + deltaX) + 'px';
                         sidePanel.style.top = (initialTop + deltaY) + 'px';
                         sidePanel.style.right = 'auto';
-                    } else if (isSizePanelDragging) {
-                        const deltaX = e.clientX - sizePanelDragStartX;
-                        const deltaY = e.clientY - sizePanelDragStartY;
-                        // Mark that dragging occurred if mouse moved
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            sizePanelDragOccurred = true;
-                        }
-                        sizePanel.style.position = 'fixed';
-                        sizePanel.style.left = (sizePanelInitialLeft + deltaX) + 'px';
-                        sizePanel.style.top = (sizePanelInitialTop + deltaY) + 'px';
-                        sizePanel.style.right = 'auto';
-                    } else if (foregroundSectionDragging) {
-                        const deltaX = e.clientX - foregroundDragStartX;
-                        const deltaY = e.clientY - foregroundDragStartY;
-                        // Mark that dragging occurred if mouse moved
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            foregroundSectionDragOccurred = true;
-                        }
-                        foregroundSection.style.position = 'fixed';
-                        foregroundSection.style.left = (foregroundInitialLeft + deltaX) + 'px';
-                        foregroundSection.style.top = (foregroundInitialTop + deltaY) + 'px';
-                        foregroundSection.style.right = 'auto';
-                    } else if (backgroundSectionDragging) {
-                        const deltaX = e.clientX - backgroundDragStartX;
-                        const deltaY = e.clientY - backgroundDragStartY;
-                        // Mark that dragging occurred if mouse moved
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            backgroundSectionDragOccurred = true;
-                        }
-                        backgroundSection.style.position = 'fixed';
-                        backgroundSection.style.left = (backgroundInitialLeft + deltaX) + 'px';
-                        backgroundSection.style.top = (backgroundInitialTop + deltaY) + 'px';
-                        backgroundSection.style.right = 'auto';
-                    } else if (pipesSectionDragging) {
-                        const deltaX = e.clientX - pipesDragStartX;
-                        const deltaY = e.clientY - pipesDragStartY;
-                        // Mark that dragging occurred if mouse moved
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            pipesSectionDragOccurred = true;
-                        }
-                        pipesSection.style.position = 'fixed';
-                        pipesSection.style.left = (pipesInitialLeft + deltaX) + 'px';
-                        pipesSection.style.top = (pipesInitialTop + deltaY) + 'px';
-                        pipesSection.style.right = 'auto';
-                    } else if (firebarsSectionDragging) {
-                        const deltaX = e.clientX - firebarsDragStartX;
-                        const deltaY = e.clientY - firebarsDragStartY;
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            firebarsSectionDragOccurred = true;
-                        }
-                        firebarsSection.style.position = 'fixed';
-                        firebarsSection.style.left = (firebarsInitialLeft + deltaX) + 'px';
-                        firebarsSection.style.top = (firebarsInitialTop + deltaY) + 'px';
-                        firebarsSection.style.right = 'auto';
-                    } else if (platformsSectionDragging) {
-                        const deltaX = e.clientX - platformsDragStartX;
-                        const deltaY = e.clientY - platformsDragStartY;
-                        if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                            platformsSectionDragOccurred = true;
-                        }
-                        platformsSection.style.position = 'fixed';
-                        platformsSection.style.left = (platformsInitialLeft + deltaX) + 'px';
-                        platformsSection.style.top = (platformsInitialTop + deltaY) + 'px';
-                        platformsSection.style.right = 'auto';
                     } else if (isResizing) {
                         const deltaX = e.clientX - dragStartX;
                         const newWidth = Math.max(60, Math.min(200, initialWidth + deltaX));
                         sidePanel.style.width = newWidth + 'px';
-                        // Panels are fixed positioned and independent - no need to adjust main content
-                    } else if (isResizingForeground) {
-                        if (resizeType === 'width' || resizeType === 'both') {
-                            const deltaX = e.clientX - resizeStartX;
-                            const newWidth = Math.max(180, Math.min(800, resizeStartWidth + deltaX));
-                            foregroundSection.style.width = newWidth + 'px';
-                        }
-                        if (resizeType === 'height' || resizeType === 'both') {
-                            const deltaY = e.clientY - resizeStartY;
-                            const newHeight = Math.max(100, Math.min(800, resizeStartHeight + deltaY));
-                            foregroundSection.style.height = newHeight + 'px';
-                        }
-                    } else if (isResizingPipes) {
-                        if (resizeType === 'width' || resizeType === 'both') {
-                            const deltaX = e.clientX - resizeStartX;
-                            const newWidth = Math.max(180, Math.min(800, resizeStartWidth + deltaX));
-                            pipesSection.style.width = newWidth + 'px';
-                        }
-                        if (resizeType === 'height' || resizeType === 'both') {
-                            const deltaY = e.clientY - resizeStartY;
-                            const newHeight = Math.max(100, Math.min(800, resizeStartHeight + deltaY));
-                            pipesSection.style.height = newHeight + 'px';
-                        }
-                    } else if (isResizingFirebars) {
-                        if (resizeType === 'width' || resizeType === 'both') {
-                            const deltaX = e.clientX - resizeStartX;
-                            const newWidth = Math.max(180, Math.min(800, resizeStartWidth + deltaX));
-                            firebarsSection.style.width = newWidth + 'px';
-                        }
-                        if (resizeType === 'height' || resizeType === 'both') {
-                            const deltaY = e.clientY - resizeStartY;
-                            const newHeight = Math.max(100, Math.min(800, resizeStartHeight + deltaY));
-                            firebarsSection.style.height = newHeight + 'px';
-                        }
-                    } else if (isResizingPlatforms) {
-                        if (resizeType === 'width' || resizeType === 'both') {
-                            const deltaX = e.clientX - resizeStartX;
-                            const newWidth = Math.max(180, Math.min(800, resizeStartWidth + deltaX));
-                            platformsSection.style.width = newWidth + 'px';
-                        }
-                        if (resizeType === 'height' || resizeType === 'both') {
-                            const deltaY = e.clientY - resizeStartY;
-                            const newHeight = Math.max(100, Math.min(800, resizeStartHeight + deltaY));
-                            platformsSection.style.height = newHeight + 'px';
-                        }
                     }
                     rafId = null;
                 });
@@ -4396,699 +4289,110 @@ menu.style.top = e.clientY + 'px';
                 sidePanel.classList.remove('dragging');
                 savePanelPositions();
             }
-            if (isSizePanelDragging) {
-                sizePanel.classList.remove('dragging');
-                savePanelPositions();
-            }
             isDragging = false;
-            isSizePanelDragging = false;
             isResizing = false;
         });
 
-        // Main content padding removed - side panel is fixed and doesn't affect layout
-
-        // Toggle panel (side-panel and size-panel)
+        // Toggle panel (side-panel)
         function togglePanel(panelId) {
-            // Don't toggle if dragging occurred
             if (panelId === 'sidePanel' && sidePanelDragOccurred) {
                 sidePanelDragOccurred = false;
-                return;
-            }
-            if (panelId === 'sizePanel' && sizePanelDragOccurred) {
-                sizePanelDragOccurred = false;
                 return;
             }
             
             const panel = document.getElementById(panelId);
             if (panel) {
                 const isMinimized = panel.classList.contains('minimized');
-                const isExpanded = panel.classList.contains('expanded');
-                
-                // Remove both classes first
-                panel.classList.remove('minimized', 'expanded');
-                
-                // Toggle to opposite state
-                if (isMinimized) {
-                    panel.classList.add('expanded');
-                } else {
-                    panel.classList.add('minimized');
+                panel.classList.toggle('minimized');
+                panel.classList.toggle('expanded', !isMinimized);
+                savePanelStates();
+            }
+        }
+
+        function toggleOutputSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.toggle('minimized');
+                const toggle = section.querySelector('.output-section-toggle');
+                if (toggle) {
+                    toggle.textContent = section.classList.contains('minimized') ? '+' : '−';
                 }
-                
-                // Save panel states
                 savePanelStates();
             }
         }
 
         function savePanelStates() {
             const states = {};
-            if (sidePanel) {
+            if (sidePanel && !sidePanel.classList.contains('tools-section')) {
                 states.sidePanel = sidePanel.classList.contains('minimized') ? 'minimized' : 'expanded';
             }
-            if (sizePanel) {
-                states.sizePanel = sizePanel.classList.contains('minimized') ? 'minimized' : 'expanded';
-            }
+            
+            // Save output section states
+            const outputSections = ['section-foreground', 'section-pipes', 'section-firebars', 'section-platforms'];
+            states.outputSections = {};
+            outputSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    states.outputSections[id] = el.classList.contains('minimized') ? 'minimized' : 'expanded';
+                }
+            });
+
             localStorage.setItem('panelStates', JSON.stringify(states));
         }
 
         function loadPanelStates() {
             const saved = localStorage.getItem('panelStates');
             if (!saved) return;
-            
             try {
                 const states = JSON.parse(saved);
                 
-                if (states.sidePanel && sidePanel) {
+                // Load side panel state
+                if (states.sidePanel && sidePanel && !sidePanel.classList.contains('tools-section')) {
                     sidePanel.classList.remove('minimized', 'expanded');
                     sidePanel.classList.add(states.sidePanel);
                 }
-                
-                if (states.sizePanel && sizePanel) {
-                    sizePanel.classList.remove('minimized', 'expanded');
-                    sizePanel.classList.add(states.sizePanel);
+
+                // Load output section states
+                if (states.outputSections) {
+                    Object.entries(states.outputSections).forEach(([id, state]) => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            if (state === 'minimized') {
+                                el.classList.add('minimized');
+                                const toggle = el.querySelector('.output-section-toggle');
+                                if (toggle) toggle.textContent = '+';
+                            } else {
+                                el.classList.remove('minimized');
+                                const toggle = el.querySelector('.output-section-toggle');
+                                if (toggle) toggle.textContent = '−';
+                            }
+                        }
+                    });
                 }
             } catch (e) {
                 console.error('Error loading panel states:', e);
             }
         }
 
-        // Minimize/Expand output sections
-        function toggleMinimize(sectionId) {
-            // Don't toggle if dragging occurred
-            if (sectionId === 'output-foreground' && foregroundSectionDragOccurred) {
-                foregroundSectionDragOccurred = false;
-                return;
-            }
-            if (sectionId === 'output-bg-section' && backgroundSectionDragOccurred) {
-                backgroundSectionDragOccurred = false;
-                return;
-            }
-            if (sectionId === 'output-pipes-section' && pipesSectionDragOccurred) {
-                pipesSectionDragOccurred = false;
-                return;
-            }
-            if (sectionId === 'output-firebars-section' && firebarsSectionDragOccurred) {
-                firebarsSectionDragOccurred = false;
-                return;
-            }
-            
-            const section = document.getElementById(sectionId);
-            if (section) {
-                const isMinimized = section.classList.contains('minimized');
-                const isExpanded = section.classList.contains('expanded');
-                
-                // Remove both classes first
-                section.classList.remove('minimized', 'expanded');
-                
-                // Toggle to opposite state
-                if (isMinimized) {
-                    section.classList.add('expanded');
-                    // Restore saved sizes when expanding
-                    setTimeout(() => {
-                        const saved = localStorage.getItem('sectionSizes');
-                        if (saved) {
-                            try {
-                                const sizes = JSON.parse(saved);
-                                if (sectionId === 'output-foreground' && sizes.foregroundSection) {
-                                    if (sizes.foregroundSection.width) section.style.width = sizes.foregroundSection.width + 'px';
-                                    if (sizes.foregroundSection.height) section.style.height = sizes.foregroundSection.height + 'px';
-                                } else if (sectionId === 'output-pipes-section' && sizes.pipesSection) {
-                                    if (sizes.pipesSection.width) section.style.width = sizes.pipesSection.width + 'px';
-                                    if (sizes.pipesSection.height) section.style.height = sizes.pipesSection.height + 'px';
-                                }
-                            } catch (e) {
-                                console.error('Failed to restore section sizes:', e);
-                            }
-                        }
-                    }, 0);
-                } else {
-                    section.classList.add('minimized');
-                }
-                
-                const btn = section.querySelector('.minimize-btn');
-                if (btn) {
-                    let emoji = '📄';
-                    if (sectionId === 'output-pipes-section') emoji = '🚪';
-                    else if (sectionId === 'output-firebars-section') emoji = '🔥';
-                    else if (sectionId === 'output-platforms-section') emoji = '🪜';
-                    else if (sectionId === 'output-foreground') emoji = '📄';
-                    
-                    // Always keep the section-specific emoji (no ➖ toggle)
-                    btn.textContent = emoji;
-                }
-                
-                // Save section states
-                saveSectionStates();
-            }
-        }
-
-        function saveSectionStates() {
-            const states = {};
-            if (foregroundSection) {
-                states.foreground = foregroundSection.classList.contains('minimized') ? 'minimized' : 'expanded';
-            }
-            if (pipesSection) {
-                states.pipes = pipesSection.classList.contains('minimized') ? 'minimized' : 'expanded';
-            }
-            if (firebarsSection) {
-                states.firebars = firebarsSection.classList.contains('minimized') ? 'minimized' : 'expanded';
-            }
-            if (platformsSection) {
-                states.platforms = platformsSection.classList.contains('minimized') ? 'minimized' : 'expanded';
-            }
-            localStorage.setItem('sectionStates', JSON.stringify(states));
-        }
-
-        function loadSectionStates() {
-            const saved = localStorage.getItem('sectionStates');
-            if (!saved) return;
-            
-            try {
-                const states = JSON.parse(saved);
-                
-                if (states.foreground && foregroundSection) {
-                    foregroundSection.classList.remove('minimized', 'expanded');
-                    foregroundSection.classList.add(states.foreground);
-                    const btn = foregroundSection.querySelector('.minimize-btn');
-                    if (btn) {
-                        btn.textContent = states.foreground === 'minimized' ? '📄' : '➖';
-                    }
-                }
-                
-                if (states.pipes && pipesSection) {
-                    pipesSection.classList.remove('minimized', 'expanded');
-                    pipesSection.classList.add(states.pipes);
-                    const btn = pipesSection.querySelector('.minimize-btn');
-                    if (btn) {
-                        btn.textContent = states.pipes === 'minimized' ? '🚪' : '➖';
-                    }
-                }
-                
-                
-                if (states.firebars && firebarsSection) {
-                    firebarsSection.classList.remove('minimized', 'expanded');
-                    firebarsSection.classList.add(states.firebars);
-                    const btn = firebarsSection.querySelector('.minimize-btn');
-                    if (btn) {
-                        btn.textContent = '🔥';
-                    }
-                }
-                
-                if (states.platforms && platformsSection) {
-                    platformsSection.classList.remove('minimized', 'expanded');
-                    platformsSection.classList.add(states.platforms);
-                    const btn = platformsSection.querySelector('.minimize-btn');
-                    if (btn) {
-                        btn.textContent = '🪜';
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to load section states:', e);
-            }
-        }
-
-
-        // Initialize foreground section dragging - same as size panel
-        const foregroundSection = document.getElementById('output-foreground');
-        let foregroundSectionDragging = false;
-        let foregroundDragStartX = 0;
-        let foregroundDragStartY = 0;
-        let foregroundInitialLeft = 0;
-        let foregroundInitialTop = 0;
-        let foregroundSectionDragOccurred = false;
-
-        if (foregroundSection) {
-            foregroundSection.addEventListener('mousedown', (e) => {
-                // Don't drag if clicking on buttons or resize handles
-                if (e.target.closest('button') || e.target.closest('.output-section-resize') || e.target.closest('.output-section-resize-width') || e.target.closest('.output-section-resize-height')) return;
-                foregroundSectionDragging = true;
-                foregroundSectionDragOccurred = false;
-                foregroundSection.classList.add('dragging');
-                foregroundDragStartX = e.clientX;
-                foregroundDragStartY = e.clientY;
-                const rect = foregroundSection.getBoundingClientRect();
-                foregroundInitialLeft = rect.left;
-                foregroundInitialTop = rect.top;
-                e.preventDefault();
-            });
-        }
-
-        // Initialize background section dragging - same as size panel
-        const backgroundSection = document.getElementById('output-bg-section');
-        let backgroundSectionDragging = false;
-        let backgroundDragStartX = 0;
-        let backgroundDragStartY = 0;
-        let backgroundInitialLeft = 0;
-        let backgroundInitialTop = 0;
-        let backgroundSectionDragOccurred = false;
-
-        if (backgroundSection) {
-            backgroundSection.addEventListener('mousedown', (e) => {
-                // Don't drag if clicking on buttons or resize handles
-                if (e.target.closest('button') || e.target.closest('.output-section-resize') || e.target.closest('.output-section-resize-width') || e.target.closest('.output-section-resize-height')) return;
-                backgroundSectionDragging = true;
-                backgroundSectionDragOccurred = false;
-                backgroundSection.classList.add('dragging');
-                backgroundDragStartX = e.clientX;
-                backgroundDragStartY = e.clientY;
-                const rect = backgroundSection.getBoundingClientRect();
-                backgroundInitialLeft = rect.left;
-                backgroundInitialTop = rect.top;
-                e.preventDefault();
-            });
-        }
-
-        // Initialize pipes section dragging - same as size panel
-        const pipesSection = document.getElementById('output-pipes-section');
-        let pipesSectionDragging = false;
-        let pipesDragStartX = 0;
-        let pipesDragStartY = 0;
-        let pipesInitialLeft = 0;
-        let pipesInitialTop = 0;
-        let pipesSectionDragOccurred = false;
-
-        if (pipesSection) {
-            pipesSection.addEventListener('mousedown', (e) => {
-                // Don't drag if clicking on buttons, resize handles, or pipe entries
-                if (e.target.closest('button') || e.target.closest('.output-section-resize') || e.target.closest('.output-section-resize-width') || e.target.closest('.output-section-resize-height') || e.target.closest('.pipe-entry')) return;
-                pipesSectionDragging = true;
-                pipesSectionDragOccurred = false;
-                pipesSection.classList.add('dragging');
-                pipesDragStartX = e.clientX;
-                pipesDragStartY = e.clientY;
-                const rect = pipesSection.getBoundingClientRect();
-                pipesInitialLeft = rect.left;
-                pipesInitialTop = rect.top;
-                e.preventDefault();
-            });
-        }
-
-        // Initialize firebars section dragging - same as size panel
-        const firebarsSection = document.getElementById('output-firebars-section');
-        let firebarsSectionDragging = false;
-        let firebarsDragStartX = 0;
-        let firebarsDragStartY = 0;
-        let firebarsInitialLeft = 0;
-        let firebarsInitialTop = 0;
-        let firebarsSectionDragOccurred = false;
-
-        if (firebarsSection) {
-            firebarsSection.addEventListener('mousedown', (e) => {
-                // Don't drag if clicking on buttons, resize handles, or firebar entries
-                if (e.target.closest('button') || e.target.closest('.output-section-resize') || e.target.closest('.output-section-resize-width') || e.target.closest('.output-section-resize-height') || e.target.closest('.firebar-entry')) return;
-                firebarsSectionDragging = true;
-                firebarsSectionDragOccurred = false;
-                firebarsSection.classList.add('dragging');
-                firebarsDragStartX = e.clientX;
-                firebarsDragStartY = e.clientY;
-                const rect = firebarsSection.getBoundingClientRect();
-                firebarsInitialLeft = rect.left;
-                firebarsInitialTop = rect.top;
-                e.preventDefault();
-            });
-        }
-
-        // Initialize platforms section dragging - same as size panel
-        const platformsSection = document.getElementById('output-platforms-section');
-        let platformsSectionDragging = false;
-        let platformsDragStartX = 0;
-        let platformsDragStartY = 0;
-        let platformsInitialLeft = 0;
-        let platformsInitialTop = 0;
-        let platformsSectionDragOccurred = false;
-
-        if (platformsSection) {
-            platformsSection.addEventListener('mousedown', (e) => {
-                if (e.target.closest('button') || e.target.closest('.output-section-resize') || e.target.closest('.output-section-resize-width') || e.target.closest('.output-section-resize-height') || e.target.closest('.platform-entry')) return;
-                platformsSectionDragging = true;
-                platformsSectionDragOccurred = false;
-                platformsSection.classList.add('dragging');
-                platformsDragStartX = e.clientX;
-                platformsDragStartY = e.clientY;
-                const rect = platformsSection.getBoundingClientRect();
-                platformsInitialLeft = rect.left;
-                platformsInitialTop = rect.top;
-                e.preventDefault();
-            });
-        }
-
-
-        // Initialize resize functionality for all output sections
-        let isResizingForeground = false;
-        let isResizingPipes = false;
-        let isResizingFirebars = false;
-        let isResizingPlatforms = false;
-        let resizeStartX = 0;
-        let resizeStartY = 0;
-        let resizeStartWidth = 0;
-        let resizeStartHeight = 0;
-        let resizeType = ''; // 'width', 'height', or 'both'
-
-        const foregroundResize = document.getElementById('foreground-section-resize');
-        const foregroundResizeWidth = document.getElementById('foreground-section-resize-width');
-        const foregroundResizeHeight = document.getElementById('foreground-section-resize-height');
-        const pipesResize = document.getElementById('pipes-section-resize');
-        const pipesResizeWidth = document.getElementById('pipes-section-resize-width');
-        const pipesResizeHeight = document.getElementById('pipes-section-resize-height');
-        const firebarsResize = document.getElementById('firebars-section-resize');
-        const firebarsResizeWidth = document.getElementById('firebars-section-resize-width');
-        const firebarsResizeHeight = document.getElementById('firebars-section-resize-height');
-        const platformsResize = document.getElementById('platforms-section-resize');
-        const platformsResizeWidth = document.getElementById('platforms-section-resize-width');
-        const platformsResizeHeight = document.getElementById('platforms-section-resize-height');
-
-        // Foreground section resize handlers
-        if (foregroundResize) {
-            foregroundResize.addEventListener('mousedown', (e) => {
-                isResizingForeground = true;
-                resizeType = 'both';
-                resizeStartX = e.clientX;
-                resizeStartY = e.clientY;
-                resizeStartWidth = foregroundSection.offsetWidth;
-                resizeStartHeight = foregroundSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        if (foregroundResizeWidth) {
-            foregroundResizeWidth.addEventListener('mousedown', (e) => {
-                isResizingForeground = true;
-                resizeType = 'width';
-                resizeStartX = e.clientX;
-                resizeStartWidth = foregroundSection.offsetWidth;
-                e.preventDefault();
-            });
-        }
-
-        if (foregroundResizeHeight) {
-            foregroundResizeHeight.addEventListener('mousedown', (e) => {
-                isResizingForeground = true;
-                resizeType = 'height';
-                resizeStartY = e.clientY;
-                resizeStartHeight = foregroundSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        // Pipes section resize handlers
-        if (pipesResize) {
-            pipesResize.addEventListener('mousedown', (e) => {
-                isResizingPipes = true;
-                resizeType = 'both';
-                resizeStartX = e.clientX;
-                resizeStartY = e.clientY;
-                resizeStartWidth = pipesSection.offsetWidth;
-                resizeStartHeight = pipesSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        if (pipesResizeWidth) {
-            pipesResizeWidth.addEventListener('mousedown', (e) => {
-                isResizingPipes = true;
-                resizeType = 'width';
-                resizeStartX = e.clientX;
-                resizeStartWidth = pipesSection.offsetWidth;
-                e.preventDefault();
-            });
-        }
-
-        if (pipesResizeHeight) {
-            pipesResizeHeight.addEventListener('mousedown', (e) => {
-                isResizingPipes = true;
-                resizeType = 'height';
-                resizeStartY = e.clientY;
-                resizeStartHeight = pipesSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        // Firebars section resize handlers
-        if (firebarsResize) {
-            firebarsResize.addEventListener('mousedown', (e) => {
-                isResizingFirebars = true;
-                resizeType = 'both';
-                resizeStartX = e.clientX;
-                resizeStartY = e.clientY;
-                resizeStartWidth = firebarsSection.offsetWidth;
-                resizeStartHeight = firebarsSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        if (firebarsResizeWidth) {
-            firebarsResizeWidth.addEventListener('mousedown', (e) => {
-                isResizingFirebars = true;
-                resizeType = 'width';
-                resizeStartX = e.clientX;
-                resizeStartWidth = firebarsSection.offsetWidth;
-                e.preventDefault();
-            });
-        }
-
-        if (firebarsResizeHeight) {
-            firebarsResizeHeight.addEventListener('mousedown', (e) => {
-                isResizingFirebars = true;
-                resizeType = 'height';
-                resizeStartY = e.clientY;
-                resizeStartHeight = firebarsSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        // Platforms section resize handlers
-        if (platformsResize) {
-            platformsResize.addEventListener('mousedown', (e) => {
-                isResizingPlatforms = true;
-                resizeType = 'both';
-                resizeStartX = e.clientX;
-                resizeStartY = e.clientY;
-                resizeStartWidth = platformsSection.offsetWidth;
-                resizeStartHeight = platformsSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-        if (platformsResizeWidth) {
-            platformsResizeWidth.addEventListener('mousedown', (e) => {
-                isResizingPlatforms = true;
-                resizeType = 'width';
-                resizeStartX = e.clientX;
-                resizeStartWidth = platformsSection.offsetWidth;
-                e.preventDefault();
-            });
-        }
-
-        if (platformsResizeHeight) {
-            platformsResizeHeight.addEventListener('mousedown', (e) => {
-                isResizingPlatforms = true;
-                resizeType = 'height';
-                resizeStartY = e.clientY;
-                resizeStartHeight = platformsSection.offsetHeight;
-                e.preventDefault();
-            });
-        }
-
-
-
-        document.addEventListener('mouseup', () => {
-            if (isResizingForeground) {
-                isResizingForeground = false;
-                resizeType = '';
-                saveSectionSizes();
-                saveSectionStates();
-            }
-            if (isResizingPipes) {
-                isResizingPipes = false;
-                resizeType = '';
-                saveSectionSizes();
-                saveSectionStates();
-            }
-            if (isResizingFirebars) {
-                isResizingFirebars = false;
-                resizeType = '';
-                saveSectionSizes();
-                saveSectionStates();
-            }
-            if (isResizingPlatforms) {
-                isResizingPlatforms = false;
-                resizeType = '';
-                saveSectionSizes();
-                saveSectionStates();
-            }
-            if (foregroundSectionDragging) {
-                foregroundSection.classList.remove('dragging');
-                foregroundSectionDragging = false;
-                savePanelPositions();
-            }
-            if (backgroundSectionDragging) {
-                backgroundSection.classList.remove('dragging');
-                backgroundSectionDragging = false;
-                savePanelPositions();
-            }
-            if (pipesSectionDragging) {
-                pipesSection.classList.remove('dragging');
-                pipesSectionDragging = false;
-                savePanelPositions();
-            }
-            if (firebarsSectionDragging) {
-                firebarsSection.classList.remove('dragging');
-                firebarsSectionDragging = false;
-                savePanelPositions();
-            }
-            if (platformsSectionDragging) {
-                platformsSection.classList.remove('dragging');
-                platformsSectionDragging = false;
-                savePanelPositions();
-            }
-        });
-
-        // Section size persistence
-        function saveSectionSizes() {
-            const sizes = {};
-            // Only save sizes when sections are expanded (not minimized)
-            if (foregroundSection && !foregroundSection.classList.contains('minimized')) {
-                sizes.foregroundSection = { width: foregroundSection.offsetWidth, height: foregroundSection.offsetHeight };
-            }
-            if (pipesSection && !pipesSection.classList.contains('minimized')) {
-                sizes.pipesSection = { width: pipesSection.offsetWidth, height: pipesSection.offsetHeight };
-            }
-            if (firebarsSection && !firebarsSection.classList.contains('minimized')) {
-                sizes.firebarsSection = { width: firebarsSection.offsetWidth, height: firebarsSection.offsetHeight };
-            }
-            if (platformsSection && !platformsSection.classList.contains('minimized')) {
-                sizes.platformsSection = { width: platformsSection.offsetWidth, height: platformsSection.offsetHeight };
-            }
-            localStorage.setItem('sectionSizes', JSON.stringify(sizes));
-        }
-
-        function loadSectionSizes() {
-            const saved = localStorage.getItem('sectionSizes');
-            if (!saved) return;
-            
-            try {
-                const sizes = JSON.parse(saved);
-                
-                // Only apply sizes when sections are expanded (not minimized)
-                if (sizes.foregroundSection && foregroundSection && !foregroundSection.classList.contains('minimized')) {
-                    if (sizes.foregroundSection.width) foregroundSection.style.width = sizes.foregroundSection.width + 'px';
-                    if (sizes.foregroundSection.height) foregroundSection.style.height = sizes.foregroundSection.height + 'px';
-                }
-                
-                if (sizes.pipesSection && pipesSection && !pipesSection.classList.contains('minimized')) {
-                    if (sizes.pipesSection.width) pipesSection.style.width = sizes.pipesSection.width + 'px';
-                    if (sizes.pipesSection.height) pipesSection.style.height = sizes.pipesSection.height + 'px';
-                }
-                
-                if (sizes.firebarsSection && firebarsSection && !firebarsSection.classList.contains('minimized')) {
-                    if (sizes.firebarsSection.width) firebarsSection.style.width = sizes.firebarsSection.width + 'px';
-                    if (sizes.firebarsSection.height) firebarsSection.style.height = sizes.firebarsSection.height + 'px';
-                }
-                
-                if (sizes.platformsSection && platformsSection && !platformsSection.classList.contains('minimized')) {
-                    if (sizes.platformsSection.width) platformsSection.style.width = sizes.platformsSection.width + 'px';
-                    if (sizes.platformsSection.height) platformsSection.style.height = sizes.platformsSection.height + 'px';
-                }
-                
-            } catch (e) {
-                console.error('Failed to load section sizes:', e);
-            }
-        }
-
-        // Panel position persistence
         function savePanelPositions() {
             const positions = {};
-            if (sidePanel) {
+            if (sidePanel && !sidePanel.classList.contains('tools-section')) {
                 const rect = sidePanel.getBoundingClientRect();
                 positions.sidePanel = { left: rect.left, top: rect.top };
-            }
-            if (sizePanel) {
-                const rect = sizePanel.getBoundingClientRect();
-                positions.sizePanel = { left: rect.left, top: rect.top };
-            }
-            if (foregroundSection) {
-                const rect = foregroundSection.getBoundingClientRect();
-                positions.foregroundSection = { left: rect.left, top: rect.top };
-            }
-            if (backgroundSection) {
-                const rect = backgroundSection.getBoundingClientRect();
-                positions.backgroundSection = { left: rect.left, top: rect.top };
-            }
-            if (pipesSection) {
-                const rect = pipesSection.getBoundingClientRect();
-                positions.pipesSection = { left: rect.left, top: rect.top };
-            }
-            if (firebarsSection) {
-                const rect = firebarsSection.getBoundingClientRect();
-                positions.firebarsSection = { left: rect.left, top: rect.top };
-            }
-            if (platformsSection) {
-                const rect = platformsSection.getBoundingClientRect();
-                positions.platformsSection = { left: rect.left, top: rect.top };
             }
             localStorage.setItem('panelPositions', JSON.stringify(positions));
         }
 
         function loadPanelPositions() {
-            // Load panel states (minimized/expanded) - now handled by loadPanelStates()
-            
-            
             const saved = localStorage.getItem('panelPositions');
             if (!saved) return;
-            
             try {
                 const positions = JSON.parse(saved);
-                
-                if (positions.sidePanel && sidePanel) {
+                if (positions.sidePanel && sidePanel && !sidePanel.classList.contains('tools-section')) {
                     sidePanel.style.left = positions.sidePanel.left + 'px';
                     sidePanel.style.top = positions.sidePanel.top + 'px';
                     sidePanel.style.right = 'auto';
                 }
-                
-                if (positions.sizePanel && sizePanel) {
-                    sizePanel.style.left = positions.sizePanel.left + 'px';
-                    sizePanel.style.top = positions.sizePanel.top + 'px';
-                    sizePanel.style.right = 'auto';
-                } else if (sizePanel) {
-                    // Default position if not saved
-                    sizePanel.style.left = '100px';
-                    sizePanel.style.top = '20px';
-                }
-                
-                if (positions.foregroundSection && foregroundSection) {
-                    foregroundSection.style.position = 'fixed';
-                    foregroundSection.style.left = positions.foregroundSection.left + 'px';
-                    foregroundSection.style.top = positions.foregroundSection.top + 'px';
-                    foregroundSection.style.right = 'auto';
-                }
-                
-                if (positions.backgroundSection && backgroundSection) {
-                    backgroundSection.style.position = 'fixed';
-                    backgroundSection.style.left = positions.backgroundSection.left + 'px';
-                    backgroundSection.style.top = positions.backgroundSection.top + 'px';
-                    backgroundSection.style.right = 'auto';
-                }
-                
-                if (positions.pipesSection && pipesSection) {
-                    pipesSection.style.position = 'fixed';
-                    pipesSection.style.left = positions.pipesSection.left + 'px';
-                    pipesSection.style.top = positions.pipesSection.top + 'px';
-                    pipesSection.style.right = 'auto';
-                }
-                
-                if (positions.firebarsSection && firebarsSection) {
-                    firebarsSection.style.position = 'fixed';
-                    firebarsSection.style.left = positions.firebarsSection.left + 'px';
-                    firebarsSection.style.top = positions.firebarsSection.top + 'px';
-                    firebarsSection.style.right = 'auto';
-                }
-                
-                if (positions.platformsSection && platformsSection) {
-                    platformsSection.style.position = 'fixed';
-                    platformsSection.style.left = positions.platformsSection.left + 'px';
-                    platformsSection.style.top = positions.platformsSection.top + 'px';
-                    platformsSection.style.right = 'auto';
-                }
-                
             } catch (e) {
                 console.error('Failed to load panel positions:', e);
             }
@@ -5097,10 +4401,9 @@ menu.style.top = e.clientY + 'px';
         // Initialize
         createToolbar();
         
-        // Try to load saved grid data, otherwise create new grid
         const gridLoaded = loadGridData();
         if (gridLoaded) {
-            createGrid(true); // Preserve loaded data
+            createGrid(true);
             refreshGrid();
             updatePipesList();
         } else {
@@ -5110,11 +4413,8 @@ menu.style.top = e.clientY + 'px';
         
         loadPanelPositions();
         loadPanelStates();
-        loadSectionSizes();
-        loadSectionStates();
         updateZoom();
 
-        // Auto-update grid when rows/cols change
         const rowsInput = document.getElementById('rows');
         const colsInput = document.getElementById('cols');
         
