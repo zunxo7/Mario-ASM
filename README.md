@@ -30,8 +30,8 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 | Crouch / slide| **Down arrow** or **S**        |
 | Run           | **Shift** (hold)               |
 | Fireball      | **Z** (when Fire Mario)       |
-| Kick (shell)  | **K**                         |
-| Midas Touch   | **M** (when available)        |
+| Kick (shell)  | **K** (when turtle is in shell mode — kicks shell) |
+| Midas Touch   | **M** — press **5 times** to activate (when available) |
 | Pause         | **Escape**                     |
 | Level select  | **T** (Test mode only, from main menu) |
 | Back from level select | **Escape**            |
@@ -55,7 +55,7 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 
 ### Enemies
 
-- **Goombas**, **Koopa Troopas** (walk, shell, kickable shell), **Flying turtles**, **Piranha plants**, **Bowser** (boss).
+- **Goombas**, **Koopa Troopas** (walk, shell; press **K** when turtle is in shell mode to kick the shell), **Flying turtles**, **Piranha plants**, **Bowser** (boss).
 - **Bowser**: Fireballs, lava death; defeat by fireballs, star, or **Midas Touch**; **not kickable**.
 - **Firebars**: Rotating hazards (level data).
 - **Stomping** and **shell kicks** damage enemies; star and Midas one-shot.
@@ -72,7 +72,7 @@ A **Super Mario Bros.**–style platformer written in **x86 assembly (MASM)** fo
 
 ### Midas Touch
 
-- **M** activates when available; turns enemies to gold (defeats them).
+- Press **M** **5 times** to activate when available; turns enemies to gold (defeats them).
 - **Single use per game** (one use total); **disabled on Level 4** (Bowser).
 
 ### Save & continue
